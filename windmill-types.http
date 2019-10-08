@@ -1,0 +1,157 @@
+# -----------------------
+# Authentication
+# -----------------------
+
+@authUrl = login.microsoftonline.com/{{TENANT_ID}}
+@tsiApi = https%3A%2F%2Fapi.timeseries.azure.com%2F
+
+###
+# @name tsiLogin
+POST https://{{authUrl}}/oauth2/token HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&client_id={{CLIENT_ID}}&client_secret={{CLIENT_SECRET}}&resource={{tsiApi}}
+
+###
+@tsiToken = {{tsiLogin.response.body.access_token}}
+
+
+# -----------------------
+# Environments
+# -----------------------
+
+###
+# @name environments
+GET https://api.timeseries.azure.com/environments?api-version=2016-12-12
+Authorization: Bearer {{tsiToken}}
+Content-Type: application/json
+
+###
+@myEnv = {{environments.response.body.environments[0].environmentId}}
+
+
+# -----------------------
+# Types
+# -----------------------
+
+###
+POST https://{{myEnv}}.env.timeseries.azure.com/timeseries/types/$batch?api-version=2018-11-01-preview
+Authorization: Bearer {{tsiToken}}
+Content-Type: application/json
+
+{
+  "put": [
+    {
+      "id": "602d8899-7898-4d8f-8a07-173eb23a1927",
+      "name": "OutdoorTemperatureSensor",
+      "description": "This is an outdoor temperature sensor.",
+      "variables": {
+        "Outdoor Temperature": {
+          "kind": "numeric",
+          "value": {
+            "tsx": "$event.[Value].Double"
+          },
+          "aggregation": {
+            "tsx": "avg($value)"
+          }
+        }
+      }
+    },
+    {
+      "id": "8dbd8cf2-70da-4ec0-b8a3-2d93488cbd91",
+      "name": "AtmosphericPressureSensor",
+      "description": "This is an atmospheric pressure sensor.",
+      "variables": {
+        "Atmospheric Pressure": {
+          "kind": "numeric",
+          "value": {
+            "tsx": "$event.[Value].Double"
+          },
+          "aggregation": {
+            "tsx": "avg($value)"
+          }
+        }
+      }
+    },
+    {
+      "id": "09f0a729-1e79-475a-8e79-791fcf2cc412",
+      "name": "WindVelocitySensor",
+      "description": "This is a wind velocity sensor.",
+      "variables": {
+        "Windo Velocity": {
+          "kind": "numeric",
+          "value": {
+            "tsx": "$event.[Value].Double"
+          },
+          "aggregation": {
+            "tsx": "avg($value)"
+          }
+        }
+      }
+    },
+    {
+      "id": "bd1c727a-6191-4d26-81b1-91d07ea07ad2",
+      "name": "BearingTemperatureSensor",
+      "description": "This is a bearing temperature sensor.",
+      "variables": {
+        "Bearing Temperature": {
+          "kind": "numeric",
+          "value": {
+            "tsx": "$event.[Value].Double"
+          },
+          "aggregation": {
+            "tsx": "avg($value)"
+          }
+        }
+      }
+    },
+    {
+      "id": "f89ca42e-f05f-400b-af74-f6000c6c84b9",
+      "name": "OilVisocitySensor",
+      "description": "This is an oil visocity sensor.",
+      "variables": {
+        "Oil Visocity": {
+          "kind": "numeric",
+          "value": {
+            "tsx": "$event.[Value].Double"
+          },
+          "aggregation": {
+            "tsx": "avg($value)"
+          }
+        }
+      }
+    },
+    {
+      "id": "c31d0ea8-11f4-4654-9a73-e016ec0df3d1",
+      "name": "PowerOutputSensor",
+      "description": "This is a power output sensor.",
+      "variables": {
+        "Power Output": {
+          "kind": "numeric",
+          "value": {
+            "tsx": "$event.[Value].Double"
+          },
+          "aggregation": {
+            "tsx": "avg($value)"
+          }
+        }
+      }
+    },
+    {
+      "id": "5b48de08-dd05-4f21-a704-e24ff2d6284a",
+      "name": "GridCapacitySensor",
+      "description": "This is a grid capacity sensor.",
+      "variables": {
+        "Grid Capacity": {
+          "kind": "numeric",
+          "value": {
+            "tsx": "$event.[Value].Double"
+          },
+          "aggregation": {
+            "tsx": "avg($value)"
+          }
+        }
+      }
+    }
+  ]
+}

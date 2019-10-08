@@ -1,0 +1,211 @@
+# -----------------------
+# Variables
+# -----------------------
+@location = Franklin
+@asset = WM3
+@OutdoorTemperatureId = Sensor_84
+@AtmosphericPressureId = Sensor_85
+@WindVelocityId = Sensor_86
+@BearingTemperatureId = Sensor_87
+@OilVisocityId = Sensor_88
+@PowerOutputId = Sensor_89
+@GridCapacityId = Sensor_90
+
+@authUrl = login.microsoftonline.com/{{TENANT_ID}}
+@tsiApi = https%3A%2F%2Fapi.timeseries.azure.com%2F
+
+
+# -----------------------
+# Authentication
+# -----------------------
+
+###
+# @name tsiLogin
+POST https://{{authUrl}}/oauth2/token HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&client_id={{CLIENT_ID}}&client_secret={{CLIENT_SECRET}}&resource={{tsiApi}}
+
+###
+@tsiToken = {{tsiLogin.response.body.access_token}}
+
+
+# -----------------------
+# Environments
+# -----------------------
+
+###
+# @name environments
+GET https://api.timeseries.azure.com/environments?api-version=2016-12-12
+Authorization: Bearer {{tsiToken}}
+Content-Type: application/json
+
+###
+@myEnv = {{environments.response.body.environments[0].environmentId}}
+
+
+# -----------------------
+# Types
+# -----------------------
+
+###
+# @name types
+POST https://{{myEnv}}.env.timeseries.azure.com/timeseries/types/$batch?api-version=2018-11-01-preview
+Authorization: Bearer {{tsiToken}}
+Content-Type: application/json
+
+{
+  "get": {
+    "names": [
+        "OutdoorTemperatureSensor",
+        "AtmosphericPressureSensor",
+        "WindVelocitySensor",
+        "BearingTemperatureSensor",
+        "OilVisocitySensor",
+        "PowerOutputSensor",
+        "GridCapacitySensor"
+    ]
+  }
+}
+
+@OutdoorTemperatureSensorType = {{types.response.body.get[0].timeSeriesType.id}}
+@AtmosphericPressureSensorType = {{types.response.body.get[1].timeSeriesType.id}}
+@WindVelocitySensorType = {{types.response.body.get[2].timeSeriesType.id}}
+@BearingTemperatureSensorType = {{types.response.body.get[3].timeSeriesType.id}}
+@OilVisocitySensorType = {{types.response.body.get[4].timeSeriesType.id}}
+@PowerOutputSensorType = {{types.response.body.get[5].timeSeriesType.id}}
+@GridCapacitySensorType = {{types.response.body.get[6].timeSeriesType.id}}
+
+
+
+# -----------------------
+# Hiearchy
+# -----------------------
+
+###
+# @name hiearchy
+POST https://{{myEnv}}.env.timeseries.azure.com/timeseries/hierarchies/$batch?api-version=2018-11-01-preview
+Authorization: Bearer {{tsiToken}}
+Content-Type: application/json
+
+{
+  "get": {
+    "names": [
+        "Wind Farm"
+    ]
+  }
+}
+
+@WindFarm = {{hiearchy.response.body.get[0].hierarchy.id}}
+
+
+
+# -----------------------
+# Instance
+# -----------------------
+
+###
+# @name instance
+
+POST https://{{myEnv}}.env.timeseries.azure.com/timeseries/instances/$batch?api-version=2018-11-01-preview
+Authorization: Bearer {{tsiToken}}
+Content-Type: application/json
+
+{
+"put": [
+    {
+      "timeSeriesId": [ "{{OutdoorTemperatureId}}" ],
+      "name": "Outdoor Temperature ({{location}}-{{asset}}",
+      "typeId": "{{OutdoorTemperatureSensorType}}",
+      "hierarchyIds": [ "{{WindFarm}}" ],
+      "instanceFields": {
+        "Location": "{{location}}",
+        "Asset": "{{asset}}",
+        "System": "Environmental",
+        "Instrument": "Climate"
+      }
+    },
+    {
+      "timeSeriesId": [ "{{AtmosphericPressureId}}" ],
+      "name": "Atmospheric Pressure ({{location}}-{{asset}}",
+      "typeId": "{{AtmosphericPressureSensorType}}",
+      "hierarchyIds": [
+        "{{WindFarm}}"
+      ],
+      "instanceFields": {
+        "Location": "{{location}}",
+        "Asset": "{{asset}}",
+        "System": "Environmental",
+        "Instrument": "Climate"
+      }
+    },
+    {
+      "timeSeriesId": [ "{{WindVelocityId}}" ],
+      "name": "Wind Velocity ({{location}}-{{asset}}",
+      "typeId": "{{WindVelocitySensorType}}",
+      "hierarchyIds": [
+        "{{WindFarm}}"
+      ],
+      "instanceFields": {
+        "Location": "{{location}}",
+        "Asset": "{{asset}}",
+        "System": "Environmental",
+        "Instrument": "Climate"
+      }
+    },
+    {
+      "timeSeriesId": [ "{{BearingTemperatureId}}" ],
+      "name": "Bearing Temperature ({{location}}-{{asset}}",
+      "typeId": "{{BearingTemperatureSensorType}}",
+      "hierarchyIds": [
+        "{{WindFarm}}"
+      ],
+      "instanceFields": {
+        "Location": "{{location}}",
+        "Asset": "{{asset}}",
+        "System": "Internal",
+        "Instrument": "Generator"
+      }
+    },
+    {
+      "timeSeriesId":[ "{{OilVisocityId}}" ],
+      "name": "Oil Viscocity ({{location}}-{{asset}}",
+      "typeId": "{{OilVisocitySensorType}}",
+      "hierarchyIds": [
+        "{{WindFarm}}"
+      ],
+      "instanceFields": {
+        "Location": "{{location}}",
+        "Asset": "{{asset}}",
+        "System": "Internal",
+        "Instrument": "Generator"
+      }
+    },
+    {
+      "timeSeriesId": [ "{{PowerOutputId}}" ],
+      "name": "Power Output ({{location}}-{{asset}}",
+      "typeId": "{{PowerOutputSensorType}}",
+      "hierarchyIds": [
+        "{{WindFarm}}"
+      ],
+      "instanceFields": {
+        "Location": "{{location}}",
+        "Asset": "{{asset}}",
+        "System": "Grid"
+      }
+    },
+    {
+      "timeSeriesId": [ "{{GridCapacityId}}" ],
+      "name": "Grid Capacity ({{location}}-{{asset}}",
+      "typeId": "{{GridCapacitySensorType}}",
+      "hierarchyIds": [
+        "{{WindFarm}}"
+      ],
+      "instanceFields": {
+        "Location": "{{location}}",
+        "Asset": "{{asset}}",
+        "System": "Grid"
+      }
+    }
+  ]
+}
