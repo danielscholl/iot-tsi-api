@@ -115,7 +115,7 @@ Content-Type: application/json
 "put": [
     {
       "timeSeriesId": [ "{{OutdoorTemperatureId}}" ],
-      "name": "Outdoor Temperature ({{location}}-{{asset}}",
+      "name": "Outdoor Temperature ({{location}}-{{asset}})",
       "typeId": "{{OutdoorTemperatureSensorType}}",
       "hierarchyIds": [ "{{WindFarm}}" ],
       "instanceFields": {
@@ -127,7 +127,7 @@ Content-Type: application/json
     },
     {
       "timeSeriesId": [ "{{AtmosphericPressureId}}" ],
-      "name": "Atmospheric Pressure ({{location}}-{{asset}}",
+      "name": "Atmospheric Pressure ({{location}}-{{asset}})",
       "typeId": "{{AtmosphericPressureSensorType}}",
       "hierarchyIds": [
         "{{WindFarm}}"
@@ -141,7 +141,7 @@ Content-Type: application/json
     },
     {
       "timeSeriesId": [ "{{WindVelocityId}}" ],
-      "name": "Wind Velocity ({{location}}-{{asset}}",
+      "name": "Wind Velocity ({{location}}-{{asset}})",
       "typeId": "{{WindVelocitySensorType}}",
       "hierarchyIds": [
         "{{WindFarm}}"
@@ -155,7 +155,7 @@ Content-Type: application/json
     },
     {
       "timeSeriesId": [ "{{BearingTemperatureId}}" ],
-      "name": "Bearing Temperature ({{location}}-{{asset}}",
+      "name": "Bearing Temperature ({{location}}-{{asset}})",
       "typeId": "{{BearingTemperatureSensorType}}",
       "hierarchyIds": [
         "{{WindFarm}}"
@@ -169,7 +169,7 @@ Content-Type: application/json
     },
     {
       "timeSeriesId":[ "{{OilVisocityId}}" ],
-      "name": "Oil Viscocity ({{location}}-{{asset}}",
+      "name": "Oil Viscocity ({{location}}-{{asset}})",
       "typeId": "{{OilVisocitySensorType}}",
       "hierarchyIds": [
         "{{WindFarm}}"
@@ -183,7 +183,7 @@ Content-Type: application/json
     },
     {
       "timeSeriesId": [ "{{PowerOutputId}}" ],
-      "name": "Power Output ({{location}}-{{asset}}",
+      "name": "Power Output ({{location}}-{{asset}})",
       "typeId": "{{PowerOutputSensorType}}",
       "hierarchyIds": [
         "{{WindFarm}}"
@@ -196,7 +196,7 @@ Content-Type: application/json
     },
     {
       "timeSeriesId": [ "{{GridCapacityId}}" ],
-      "name": "Grid Capacity ({{location}}-{{asset}}",
+      "name": "Grid Capacity ({{location}}-{{asset}})",
       "typeId": "{{GridCapacitySensorType}}",
       "hierarchyIds": [
         "{{WindFarm}}"

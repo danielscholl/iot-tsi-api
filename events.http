@@ -27,13 +27,15 @@ Authorization: Bearer {{tsiToken}}
 Content-Type: application/json
 
 ###
-@myEnv = {{environments.response.body.environments[0].environmentId}}
+@myEnv = {{environments.response.body.environments[1].environmentId}}
 
 
 
 # -----------------------
 # Events
 # -----------------------
+@from = 2019-10-21T18:38:00Z
+@to = 2019-10-21T18:38:40Z
 
 POST https://{{myEnv}}.env.timeseries.azure.com/timeseries/query?api-version=2018-11-01-preview
 Authorization: Bearer {{tsiToken}}
@@ -42,18 +44,35 @@ Content-Type: application/json
 {
   "getEvents": {
     "timeSeriesId": [
-      "OL-GEN-1-INST"
+      "Sensor_57"
     ],
     "searchSpan": {
-        "from":  "2019-05-29T00:00:00Z",
-        "to":  "2019-05-29T00:01:00Z"
-    },
-    "projectedProperties": [
-      {"name":"events_temperature_value","type":"Double"},
-      {"name":"events_temperature_units","type":"Double"},
-      {"name":"events_temperature_status","type":"Double"}
+        "from":  "{{from}}",
+        "to":  "{{to}}"
+    }
+  }
+}
+
+
+POST https://{{myEnv}}.env.timeseries.azure.com/timeseries/query?api-version=2018-11-01-preview
+Authorization: Bearer {{tsiToken}}
+Content-Type: application/json
+
+{
+  "getEvents": {
+    "timeSeriesId": [
+      "Sensor_57"
     ],
-    "filter": { "tsx": "($event.events_temperature_value.Double != null) AND ($event.events_temperature_status.Double = 192.0)" }
+    "searchSpan": {
+        "from":  "{{from}}",
+        "to":  "{{to}}"
+    },
+    "filter": { "tsx": "($event.Value.Double != null) AND ($event.Value.Double > 30.0)" },
+    "projectedProperties": [
+      {"name":"Id","type":"String"},
+      {"name":"Value","type":"Double"},
+      {"name":"Units","type":"String"}
+    ]
   }
 }
 
@@ -64,10 +83,10 @@ Content-Type: application/json
 
 {
   "getEvents": {
-    "timeSeriesName" : "PI-00001",
+    "timeSeriesName" : "Atmospheric Pressure (Bristol-WM1)",
     "searchSpan": {
-      "from":  "2019-05-29T00:00:00Z",
-      "to":  "2019-05-29T00:01:00Z"
+      "from":  "{{from}}",
+      "to":  "{{to}}"
     }
   }
 }
@@ -80,17 +99,30 @@ Content-Type: application/json
 
 {
   "getSeries": {
-    "timeSeriesId": [
-      "OL-GEN-1-INST"
-    ],
+    "timeSeriesName" : "Atmospheric Pressure (Bristol-WM1)",
     "searchSpan": {
-      "from":  "2019-05-29T00:00:00Z",
-      "to":  "2019-05-29T00:01:00Z"
+        "from":  "{{from}}",
+        "to":  "{{to}}"
     },
-    "projectedVariables": ["Pressure", "SuctionPressure", "DischargePressure"]
+    "projectedVariables": ["Atmospheric Pressure"]
   }
 }
 
+###
+POST https://{{myEnv}}.env.timeseries.azure.com/timeseries/query?api-version=2018-11-01-preview
+Authorization: Bearer {{tsiToken}}
+Content-Type: application/json
+
+{
+  "getSeries": {
+    "timeSeriesName" : "Bearing Temperature (Franklin-WM3)",
+    "searchSpan": {
+        "from":  "{{from}}",
+        "to":  "{{to}}"
+    },
+    "projectedVariables": ["Bearing Temperature"]
+  }
+}
 
 ###
 POST https://{{myEnv}}.env.timeseries.azure.com/timeseries/query?api-version=2018-11-01-preview
@@ -100,12 +132,12 @@ Content-Type: application/json
 {
   "getEvents": {
     "timeSeriesId": [
-      "OL-GEN-1-INST",
-      "OL-GEN-2-INST"
+      "Sensor_87",
+      "Sensor_57"
     ],
     "searchSpan": {
-      "from":  "2019-05-29T00:00:00Z",
-      "to":  "2019-05-29T00:01:00Z"
+        "from":  "{{from}}",
+        "to":  "{{to}}"
     }
   }
 }
